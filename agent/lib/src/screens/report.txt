@@ -1,0 +1,104 @@
+int _selectedIndex = 0;
+  Widget _tabBuilder() {
+    return MediaQuery.of(context).orientation.index == 1
+        ? NeumorphicToggle(
+            height: (1 / MediaQuery.of(context).devicePixelRatio) * 150,
+            duration: Duration(milliseconds: 150),
+            padding: EdgeInsets.zero,
+            style: NeumorphicToggleStyle(
+              borderRadius: BorderRadius.all(Radius.circular(5)),
+              // backgroundColor: Colors.red,
+            ),
+            selectedIndex: _selectedIndex,
+            displayForegroundOnlyIfSelected: true,
+            children: [
+              ToggleElement(
+                background: Center(
+                    child: Text(
+                  "Starter",
+                  style: TextStyle(fontWeight: FontWeight.w300),
+                )),
+                foreground: Center(
+                    child: Text(
+                  "Starter",
+                  style: TextStyle(fontWeight: FontWeight.w800),
+                )),
+              ),
+              ToggleElement(
+                background: Center(
+                    child: Text(
+                  "Main Course",
+                  style: TextStyle(fontWeight: FontWeight.w300),
+                )),
+                foreground: Center(
+                    child: Text(
+                  "Main Course",
+                  style: TextStyle(fontWeight: FontWeight.w800),
+                )),
+              ),
+              ToggleElement(
+                background: Center(
+                    child: Text(
+                  "Special",
+                  style: TextStyle(fontWeight: FontWeight.w300),
+                )),
+                foreground: Center(
+                    child: Text(
+                  "Special",
+                  style: TextStyle(fontWeight: FontWeight.w800),
+                )),
+              ),
+              ToggleElement(
+                background: Center(
+                    child: Text(
+                  "Vegan",
+                  style: TextStyle(fontWeight: FontWeight.w300),
+                )),
+                foreground: Center(
+                    child: Text(
+                  "Vegan",
+                  style: TextStyle(fontWeight: FontWeight.w800),
+                )),
+              ),
+              ToggleElement(
+                background: Center(
+                    child: Text(
+                  "Dessert",
+                  style: TextStyle(fontWeight: FontWeight.w300),
+                )),
+                foreground: Center(
+                    child: Text(
+                  "Dessert",
+                  style: TextStyle(fontWeight: FontWeight.w800),
+                )),
+              ),
+              ToggleElement(
+                background: Center(
+                    child: Text(
+                  "Drink",
+                  style: TextStyle(fontWeight: FontWeight.w300),
+                )),
+                foreground: Center(
+                    child: Text(
+                  "Drink",
+                  style: TextStyle(fontWeight: FontWeight.w800),
+                )),
+              ),
+            ],
+            thumb: Neumorphic(
+              style: NeumorphicStyle(
+                boxShape: NeumorphicBoxShape.roundRect(
+                    BorderRadius.all(Radius.circular(5))),
+              ),
+            ),
+            onChanged: (value) {
+              setState(() {
+                _selectedIndex = value;
+                print("_firstSelected: $_selectedIndex");
+                print('test' +
+                    MediaQuery.of(context).orientation.index.toString());
+              });
+            },
+          )
+        : Text('drawer');
+  }
