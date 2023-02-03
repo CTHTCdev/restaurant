@@ -15,7 +15,7 @@ class TrendingTheme {
       appBarTheme: const NeumorphicAppBarThemeData(),
       baseColor: Color(0xFF3E3E3E),
       lightSource: LightSource.topLeft,
-      depth: 6,
+      depth: 1,
     );
   }
 
@@ -24,7 +24,7 @@ class TrendingTheme {
       appBarTheme: const NeumorphicAppBarThemeData(),
       baseColor: Color(0xffDDDDDD),
       lightSource: LightSource.topLeft,
-      depth: 10,
+      depth: 5,
     );
   }
 }
