@@ -22,9 +22,9 @@ class TrendingTheme {
   static NeumorphicThemeData lightTheme() {
     return NeumorphicThemeData(
       appBarTheme: const NeumorphicAppBarThemeData(),
-      baseColor: Color(0xffDDDDDD),
+      baseColor: Color(0xFFE6E6E6),
       lightSource: LightSource.topLeft,
-      depth: 5,
+      depth: 4,
     );
   }
 }
