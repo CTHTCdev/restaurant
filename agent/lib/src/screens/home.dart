@@ -1,4 +1,8 @@
+import 'dart:collection';
+import 'dart:math';
+
 import 'package:agent/src/extensions/responsive.dart';
+import 'package:agent/src/screens/settings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
@@ -14,11 +18,145 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  bool _isOnline = false;
+  int _tabIndex = 2;
+
   @override
   Widget build(BuildContext context) {
     return context.responsive(
       df: _mainVertiBuilder(),
-      sm: _mainHorizBuilder(),
+      md: _mainHorizBuilder(),
+    );
+  }
+
+  // int tab = 0;
+  Widget _tabButton({
+    required String name,
+    required double size,
+    required IconData iconData,
+  }) {
+    return Center(
+      child: InkWell(
+        onTap: () {},
+        child: context.responsive(
+          df: Icon(
+            iconData,
+            size: size,
+          ),
+          md: Text(
+            name,
+            style: TextStyle(
+              fontWeight: FontWeight.values[(size ~/ 6)],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _tabBuilder({required bool disableDepth}) {
+    return SafeArea(
+      child: NeumorphicToggle(
+        height: 50,
+        duration: Duration(milliseconds: 100),
+        style: NeumorphicToggleStyle(
+          disableDepth: disableDepth,
+          borderRadius: BorderRadius.zero,
+        ),
+        selectedIndex: _tabIndex,
+        children: [
+          ToggleElement(
+            background: _tabButton(
+              name: 'Book Now',
+              size: 20,
+              iconData: Icons.menu_book_rounded,
+            ),
+            foreground: _tabButton(
+              name: 'Reserved',
+              size: 30,
+              iconData: Icons.menu_book_rounded,
+            ),
+          ),
+          ToggleElement(
+            background: _tabButton(
+              name: 'Table Now',
+              size: 20,
+              iconData: Icons.local_dining_rounded,
+            ),
+            foreground: _tabButton(
+              name: 'Dine In',
+              size: 30,
+              iconData: Icons.local_dining_rounded,
+            ),
+          ),
+          ToggleElement(
+            background: _tabButton(
+              name: 'Order Now',
+              size: 20,
+              iconData: Icons.delivery_dining_rounded,
+            ),
+            foreground: _tabButton(
+              name: 'Takeaway',
+              size: 30,
+              iconData: Icons.delivery_dining_rounded,
+            ),
+          ),
+          ToggleElement(
+            background: _tabButton(
+              name: 'Preview',
+              size: 20,
+              iconData: Icons.folder_open_rounded,
+            ),
+            foreground: _tabButton(
+              name: 'Current',
+              size: 30,
+              iconData: Icons.folder_open_rounded,
+            ),
+          ),
+          ToggleElement(
+            background: _tabButton(
+              name: 'Takings',
+              size: 20,
+              iconData: Icons.bar_chart_rounded,
+            ),
+            foreground: _tabButton(
+              name: 'Report',
+              size: 30,
+              iconData: Icons.bar_chart_rounded,
+            ),
+          ),
+          ToggleElement(
+            background: _tabButton(
+              name: 'Settings',
+              size: 20,
+              iconData: Icons.settings_rounded,
+            ),
+            foreground: _tabButton(
+              name: 'Admins',
+              size: 30,
+              iconData: Icons.settings_rounded,
+            ),
+          ),
+        ],
+        thumb: Neumorphic(
+          style: NeumorphicStyle(
+            boxShape: NeumorphicBoxShape.roundRect(BorderRadius.zero),
+          ),
+        ),
+        onChanged: (value) {
+          setState(() {
+            if (value != 5) _tabIndex = value;
+          });
+
+          switch (value) {
+            case 5:
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => SettingsScreen()));
+              break;
+            default:
+          }
+        },
+      ),
     );
   }
 
@@ -26,14 +164,13 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       appBar: _appBarVerti(),
       body: _bodyVertiFrame(),
-      bottomNavigationBar: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-        IconButton(onPressed: (){},icon: Icon(Icons.menu_book_rounded)),
-        IconButton(onPressed: (){},icon: Icon(Icons.local_dining_rounded)),
-        IconButton(onPressed: (){},icon: Icon(Icons.delivery_dining_rounded)),
-        IconButton(onPressed: (){},icon: Icon(Icons.settings)),],)
+      bottomNavigationBar: _tabBuilder(disableDepth: true),
+      // _tabVertiBuilder(index: 0, iconData: Icons.menu_book_rounded),
+      // _tabVertiBuilder(index: 1, iconData: Icons.local_dining_rounded),
+      // _tabVertiBuilder(index: 2, iconData: Icons.delivery_dining_rounded),
+      // _tabVertiBuilder(index: 3, iconData: Icons.folder_open_rounded),
+      // _tabVertiBuilder(index: 4, iconData: Icons.bar_chart_rounded),
+      // _tabVertiBuilder(index: 5, iconData: Icons.settings),
     );
   }
 
@@ -46,123 +183,38 @@ class _HomeScreenState extends State<HomeScreen> {
 
   NeumorphicAppBar _appBarVerti() {
     return NeumorphicAppBar(
-      title: Text('Vertical'),
+      title: Text('STORE'),
+      padding: 0,
       actions: [
         IconButton(onPressed: () {}, icon: Icon(Icons.assignment_outlined))
       ],
+      leading: _onlineStatusBuilder(),
+    );
+  }
+
+  Widget _onlineStatusBuilder() {
+    return IconButton(
+      onPressed: () {
+        setState(() {
+          _isOnline = !_isOnline;
+        });
+      },
+      icon: Icon(
+        Icons.circle,
+        color: _isOnline ? Colors.green : Colors.red,
+        size: 20,
+      ),
     );
   }
 
   NeumorphicAppBar _appBarHoriz() {
     return NeumorphicAppBar(
       padding: 5,
-      leading: IconButton(
-          onPressed: () {}, icon: Icon(Icons.circle, color: Colors.green)),
-      title: _tabBuilder(),
+      leading: _onlineStatusBuilder(),
+      title: _tabBuilder(disableDepth: false),
       actions: [
         IconButton(onPressed: () {}, icon: Icon(Icons.person_rounded)),
       ],
-    );
-  }
-
-  int _selectedIndex = 2;
-  Widget _tabBuilder() {
-    return NeumorphicToggle(
-      height: 50,
-      duration: Duration(milliseconds: 100),
-      style: NeumorphicToggleStyle(
-        borderRadius: BorderRadius.all(Radius.circular(5)),
-        // backgroundColor: Colors.red,
-      ),
-      selectedIndex: _selectedIndex,
-      displayForegroundOnlyIfSelected: true,
-      children: [
-        ToggleElement(
-          background: Center(
-              child: Text(
-            "Book Now",
-            style: TextStyle(fontWeight: FontWeight.w200),
-          )),
-          foreground: Center(
-              child: Text(
-            "Reserved",
-            style: TextStyle(fontWeight: FontWeight.w600),
-          )),
-        ),
-        ToggleElement(
-          background: Center(
-              child: Text(
-            "Table Now",
-            style: TextStyle(fontWeight: FontWeight.w200),
-          )),
-          foreground: Center(
-              child: Text(
-            "Dine In",
-            style: TextStyle(fontWeight: FontWeight.w600),
-          )),
-        ),
-        ToggleElement(
-          background: Center(
-              child: Text(
-            "Order Now",
-            style: TextStyle(fontWeight: FontWeight.w200),
-          )),
-          foreground: Center(
-              child: Text(
-            "Takeaway",
-            style: TextStyle(fontWeight: FontWeight.w600),
-          )),
-        ),
-        ToggleElement(
-          background: Center(
-              child: Text(
-            "Openned",
-            style: TextStyle(fontWeight: FontWeight.w200),
-          )),
-          foreground: Center(
-              child: Text(
-            "Preview",
-            style: TextStyle(fontWeight: FontWeight.w600),
-          )),
-        ),
-        ToggleElement(
-          background: Center(
-              child: Text(
-            "Takings",
-            style: TextStyle(fontWeight: FontWeight.w200),
-          )),
-          foreground: Center(
-              child: Text(
-            "Report",
-            style: TextStyle(fontWeight: FontWeight.w600),
-          )),
-        ),
-        ToggleElement(
-          background: Center(
-              child: Text(
-            "Settings",
-            style: TextStyle(fontWeight: FontWeight.w200),
-          )),
-          foreground: Center(
-              child: Text(
-            "Admin",
-            style: TextStyle(fontWeight: FontWeight.w600),
-          )),
-        ),
-      ],
-      thumb: Neumorphic(
-        style: NeumorphicStyle(
-          boxShape: NeumorphicBoxShape.roundRect(
-              BorderRadius.all(Radius.circular(5))),
-        ),
-      ),
-      onChanged: (value) {
-        setState(() {
-          _selectedIndex = value;
-          print("_firstSelected: $_selectedIndex");
-          print('test' + MediaQuery.of(context).orientation.index.toString());
-        });
-      },
     );
   }
 
@@ -184,15 +236,14 @@ class _HomeScreenState extends State<HomeScreen> {
       // controller: _splitController(),
       controller: SplitViewController(
         weights: [
-          context.responsive(df: 1, sm: 0.6, md: 0.65, lg: 0.7, xl: 0.75),
+          context.responsive(df: 1, md: 0.6, lg: 0.65, xl: 0.7),
         ],
         limits: [
           context.responsive(
             df: WeightLimit(min: 1, max: 1),
-            sm: WeightLimit(min: 0.6, max: 0.6),
-            md: WeightLimit(min: 0.65, max: 0.65),
-            lg: WeightLimit(min: 0.7, max: 0.7),
-            xl: WeightLimit(min: 0.75, max: 0.75),
+            md: WeightLimit(min: 0.6, max: 0.65),
+            lg: WeightLimit(min: 0.65, max: 0.7),
+            xl: WeightLimit(min: 0.7, max: 0.75),
           )
         ],
       ),
@@ -224,7 +275,7 @@ class _HomeScreenState extends State<HomeScreen> {
           shape: NeumorphicShape.concave,
           surfaceIntensity: 0.1,
           boxShape: NeumorphicBoxShape.roundRect(
-            BorderRadius.circular(0),
+            BorderRadius.zero,
           ),
         ),
         child: Icon(Icons.search),
@@ -265,7 +316,9 @@ class _HomeScreenState extends State<HomeScreen> {
         text,
         textAlign: TextAlign.center,
       )),
-      onPressed: () {},
+      onPressed: () {
+        // print('TAB is ' + tab.toString());
+      },
     );
   }
 }

@@ -12,9 +12,9 @@ extension Responsive on BuildContext {
     final hg = MediaQuery.of(this).size.height;
     final ratio = wd / hg;
 
-    print('     Ratio: ' + ratio.toString());
-    print('     width: ' + wd.toString());
-    print('    height: ' + hg.toString());
+    // print('     Ratio: ' + ratio.toString());
+    // print('     width: ' + wd.toString());
+    // print('    height: ' + hg.toString());
 
     return ratio > 2
         ? (xl ?? lg ?? md ?? sm ?? df)
