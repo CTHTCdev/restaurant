@@ -58,7 +58,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  int _selectedIndex = 1;
+  int _selectedIndex = 2;
   Widget _tabBuilder() {
     return NeumorphicToggle(
       height: 50,
@@ -121,12 +121,12 @@ class _HomeScreenState extends State<HomeScreen> {
         ToggleElement(
           background: Center(
               child: Text(
-            "Dessert",
+            "Takings",
             style: TextStyle(fontWeight: FontWeight.w200),
           )),
           foreground: Center(
               child: Text(
-            "Dessert",
+            "Report",
             style: TextStyle(fontWeight: FontWeight.w600),
           )),
         ),
