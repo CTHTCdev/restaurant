@@ -25,8 +25,15 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget _mainVertiBuilder() {
     return Scaffold(
       appBar: _appBarVerti(),
-      drawer: Drawer(child: Text('Drawer')),
       body: _bodyVertiFrame(),
+      bottomNavigationBar: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+        IconButton(onPressed: (){},icon: Icon(Icons.menu_book_rounded)),
+        IconButton(onPressed: (){},icon: Icon(Icons.local_dining_rounded)),
+        IconButton(onPressed: (){},icon: Icon(Icons.delivery_dining_rounded)),
+        IconButton(onPressed: (){},icon: Icon(Icons.settings)),],)
     );
   }
 
