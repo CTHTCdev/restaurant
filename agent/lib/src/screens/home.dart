@@ -3,6 +3,7 @@ import 'dart:math';
 
 import 'package:agent/src/extensions/responsive.dart';
 import 'package:agent/src/screens/settings.dart';
+import 'package:agent/src/screens/table.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
@@ -20,6 +21,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   bool _isOnline = false;
   int _tabIndex = 2;
+  int _tableIndex = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +39,6 @@ class _HomeScreenState extends State<HomeScreen> {
   }) {
     return Center(
       child: InkWell(
-        onTap: () {},
         child: context.responsive(
           df: Icon(
             iconData,
@@ -57,7 +58,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget _tabBuilder({required bool disableDepth}) {
     return SafeArea(
       child: NeumorphicToggle(
-        height: 50,
+        height: 60,
         duration: Duration(milliseconds: 100),
         style: NeumorphicToggleStyle(
           disableDepth: disableDepth,
@@ -149,6 +150,9 @@ class _HomeScreenState extends State<HomeScreen> {
           });
 
           switch (value) {
+            case 1: 
+              Navigator.push(context, MaterialPageRoute(builder: (context) => TableScreen(tableIndex: _tableIndex,)));
+              break;
             case 5:
               Navigator.push(context,
                   MaterialPageRoute(builder: (context) => SettingsScreen()));
@@ -183,7 +187,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   NeumorphicAppBar _appBarVerti() {
     return NeumorphicAppBar(
-      title: Text('STORE'),
+      title: Text(_tableIndex.toString()),
       padding: 0,
       actions: [
         IconButton(onPressed: () {}, icon: Icon(Icons.assignment_outlined))
