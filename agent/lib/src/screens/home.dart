@@ -2,11 +2,13 @@ import 'dart:collection';
 import 'dart:math';
 
 import 'package:agent/src/extensions/responsive.dart';
+import 'package:agent/src/screens/home/home_bloc.dart';
 import 'package:agent/src/screens/settings.dart';
 import 'package:agent/src/screens/table.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:split_view/split_view.dart';
@@ -24,10 +26,19 @@ class _HomeScreenState extends State<HomeScreen> {
   int _tableIndex = 0;
 
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return context.responsive(
-      df: _mainVertiBuilder(),
-      md: _mainHorizBuilder(),
+    return BlocProvider(
+      create: (context) => HomeBloc(),
+      child: context.responsive(
+        df: _mainVertiBuilder(),
+        md: _mainHorizBuilder(),
+      ),
     );
   }
 
@@ -150,8 +161,14 @@ class _HomeScreenState extends State<HomeScreen> {
           });
 
           switch (value) {
-            case 1: 
-              Navigator.push(context, MaterialPageRoute(builder: (context) => TableScreen(tableIndex: _tableIndex,)));
+            case 1:
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => TableScreen(
+                            tableIndex: _tableIndex,
+                          )));
+
               break;
             case 5:
               Navigator.push(context,
@@ -165,16 +182,24 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _mainVertiBuilder() {
-    return Scaffold(
-      appBar: _appBarVerti(),
-      body: _bodyVertiFrame(),
-      bottomNavigationBar: _tabBuilder(disableDepth: true),
-      // _tabVertiBuilder(index: 0, iconData: Icons.menu_book_rounded),
-      // _tabVertiBuilder(index: 1, iconData: Icons.local_dining_rounded),
-      // _tabVertiBuilder(index: 2, iconData: Icons.delivery_dining_rounded),
-      // _tabVertiBuilder(index: 3, iconData: Icons.folder_open_rounded),
-      // _tabVertiBuilder(index: 4, iconData: Icons.bar_chart_rounded),
-      // _tabVertiBuilder(index: 5, iconData: Icons.settings),
+    return BlocConsumer<HomeBloc, HomeState>(
+      listener: (context, state) {
+        // TODO: implement listener
+        print("HOME: " +state.name);
+      },
+      builder: (context, state) {
+        return Scaffold(
+          appBar: _appBarVerti(state),
+          body: _bodyVertiFrame(),
+          bottomNavigationBar: _tabBuilder(disableDepth: true),
+          // _tabVertiBuilder(index: 0, iconData: Icons.menu_book_rounded),
+          // _tabVertiBuilder(index: 1, iconData: Icons.local_dining_rounded),
+          // _tabVertiBuilder(index: 2, iconData: Icons.delivery_dining_rounded),
+          // _tabVertiBuilder(index: 3, iconData: Icons.folder_open_rounded),
+          // _tabVertiBuilder(index: 4, iconData: Icons.bar_chart_rounded),
+          // _tabVertiBuilder(index: 5, iconData: Icons.settings),
+        );
+      },
     );
   }
 
@@ -185,9 +210,9 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  NeumorphicAppBar _appBarVerti() {
+  NeumorphicAppBar _appBarVerti(HomeState state) {
     return NeumorphicAppBar(
-      title: Text(_tableIndex.toString()),
+      title: Text(state.name),
       padding: 0,
       actions: [
         IconButton(onPressed: () {}, icon: Icon(Icons.assignment_outlined))

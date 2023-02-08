@@ -1,12 +1,14 @@
 import 'package:agent/src/extensions/responsive.dart';
+import 'package:agent/src/global/state/status.dart';
+import 'package:agent/src/screens/home/home_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
 class TableScreen extends StatefulWidget {
-  
   const TableScreen({super.key, required int tableIndex});
 
   @override
@@ -14,11 +16,11 @@ class TableScreen extends StatefulWidget {
 }
 
 class _TableScreenState extends State<TableScreen> {
-  
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: _tableBuilder()
+    return BlocProvider(
+      create: (context) => HomeBloc(),
+      child: Scaffold(body: _tableBuilder()),
     );
   }
 
@@ -33,32 +35,48 @@ class _TableScreenState extends State<TableScreen> {
       crossAxisSpacing: 10,
       itemCount: 20,
       itemBuilder: (context, index) {
-        return _buttonBuilder(text: 'Table ' + index.toString(), tableIndex: index);
+        return _buttonBuilder(
+            text: 'Table ' + index.toString(), tableIndex: index);
       },
     );
   }
-  
+
   Widget _buttonBuilder({required String text, required int tableIndex}) {
-    return NeumorphicButton(
-      duration: Duration(milliseconds: 25),
-      padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-      style: NeumorphicStyle(
-        shape: NeumorphicShape.concave,
-        surfaceIntensity: 0.1,
-        boxShape: NeumorphicBoxShape.roundRect(
-          BorderRadius.circular(0),
-        ),
-      ),
-      child: Center(
-          child: Text(
-        text,
-        textAlign: TextAlign.center,
-      )),
-      onPressed: () {
-        print(tableIndex);
-        Navigator.pop(context);
+    return BlocConsumer<HomeBloc, HomeState>(
+      listener: (context, state) {
+        if(state.status is StatusSucess){
+          print("STATE: "+ state.name);
+        }
+        
+        
+      },
+      builder: (context, state) {
+
+        return NeumorphicButton(
+          duration: Duration(milliseconds: 25),
+          padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+          style: NeumorphicStyle(
+            shape: NeumorphicShape.concave,
+            surfaceIntensity: 0.1,
+            boxShape: NeumorphicBoxShape.roundRect(
+              BorderRadius.circular(0),
+            ),
+          ),
+          child: Center(
+              child: Text(
+            text,
+            textAlign: TextAlign.center,
+          ),),
+          onPressed: () {
+            
+            // print(tableIndex);
+            setState(() {
+              context.read<HomeBloc>().add(TableName_HomeEvent(name: tableIndex.toString()));
+            });
+            Navigator.pop(context);
+          },
+        );
       },
     );
   }
 }
-
