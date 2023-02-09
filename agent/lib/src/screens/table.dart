@@ -1,6 +1,3 @@
-import 'package:agent/src/extensions/responsive.dart';
-import 'package:agent/src/global/state/status.dart';
-import 'package:agent/src/screens/home/home_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
@@ -8,8 +5,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
+import 'package:agent/src/extensions/responsive.dart';
+import 'package:agent/src/global/state/status.dart';
+import 'package:agent/src/screens/home.dart';
+import 'package:agent/src/screens/home/home_bloc.dart';
+
 class TableScreen extends StatefulWidget {
-  const TableScreen({super.key, required int tableIndex});
+  TableScreen({super.key, required String tableIndex});
 
   @override
   State<TableScreen> createState() => _TableScreenState();
@@ -43,15 +45,12 @@ class _TableScreenState extends State<TableScreen> {
 
   Widget _buttonBuilder({required String text, required int tableIndex}) {
     return BlocConsumer<HomeBloc, HomeState>(
-      listener: (context, state) {
-        if(state.status is StatusSucess){
-          print("STATE: "+ state.name);
+      listener: (widget, state) {
+        if (state.status is StatusSucess) {
+          print("STATE: " + state.name);
         }
-        
-        
       },
       builder: (context, state) {
-
         return NeumorphicButton(
           duration: Duration(milliseconds: 25),
           padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
@@ -63,17 +62,25 @@ class _TableScreenState extends State<TableScreen> {
             ),
           ),
           child: Center(
-              child: Text(
-            text,
-            textAlign: TextAlign.center,
-          ),),
+            child: Text(
+              text,
+              textAlign: TextAlign.center,
+            ),
+          ),
           onPressed: () {
-            
-            // print(tableIndex);
             setState(() {
-              context.read<HomeBloc>().add(TableName_HomeEvent(name: tableIndex.toString()));
+              context
+                  .read<HomeBloc>()
+                  .add(TableName_HomeEvent(name: tableIndex.toString()));
             });
+
+            // print("Now " + widget.index);
             Navigator.pop(context);
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) =>
+                        HomeScreen(index: tableIndex.toString())));
           },
         );
       },

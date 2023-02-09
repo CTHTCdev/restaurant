@@ -1,10 +1,6 @@
 import 'dart:collection';
 import 'dart:math';
 
-import 'package:agent/src/extensions/responsive.dart';
-import 'package:agent/src/screens/home/home_bloc.dart';
-import 'package:agent/src/screens/settings.dart';
-import 'package:agent/src/screens/table.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
@@ -13,8 +9,17 @@ import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:split_view/split_view.dart';
 
+import 'package:agent/src/extensions/responsive.dart';
+import 'package:agent/src/screens/home/home_bloc.dart';
+import 'package:agent/src/screens/settings.dart';
+import 'package:agent/src/screens/table.dart';
+
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+  String index;
+  HomeScreen({
+    Key? key,
+    required this.index,
+  }) : super(key: key);
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -23,11 +28,10 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   bool _isOnline = false;
   int _tabIndex = 2;
-  int _tableIndex = 0;
-
   @override
   void initState() {
     // TODO: implement initState
+    widget.index;
     super.initState();
   }
 
@@ -162,11 +166,12 @@ class _HomeScreenState extends State<HomeScreen> {
 
           switch (value) {
             case 1:
+              Navigator.pop(context);
               Navigator.push(
                   context,
                   MaterialPageRoute(
                       builder: (context) => TableScreen(
-                            tableIndex: _tableIndex,
+                            tableIndex: widget.index,
                           )));
 
               break;
@@ -185,9 +190,9 @@ class _HomeScreenState extends State<HomeScreen> {
     return BlocConsumer<HomeBloc, HomeState>(
       listener: (context, state) {
         // TODO: implement listener
-        print("HOME: " +state.name);
       },
       builder: (context, state) {
+        // print("HOME: " + widget.index);
         return Scaffold(
           appBar: _appBarVerti(state),
           body: _bodyVertiFrame(),
@@ -212,7 +217,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   NeumorphicAppBar _appBarVerti(HomeState state) {
     return NeumorphicAppBar(
-      title: Text(state.name),
+      title: Text(widget.index),
       padding: 0,
       actions: [
         IconButton(onPressed: () {}, icon: Icon(Icons.assignment_outlined))

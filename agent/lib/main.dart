@@ -1,7 +1,9 @@
 import 'package:agent/src/screens/home.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 
+import 'src/screens/home/home_bloc.dart';
 import 'src/themes/neumorphic.dart';
 
 void main() {
@@ -17,7 +19,9 @@ class MyApp extends StatelessWidget {
     return NeumorphicApp(
       debugShowCheckedModeBanner: false,
       title: 'AGENT',
-      home: HomeScreen(),
+      home: HomeScreen(
+        index: 'TAKEAWAY',
+      ),
       theme: TrendingTheme.lightTheme(),
       themeMode: ThemeMode.light,
     );
