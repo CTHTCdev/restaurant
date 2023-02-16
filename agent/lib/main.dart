@@ -20,7 +20,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'AGENT',
       home: HomeScreen(
-        index: 'TAKEAWAY',
+        tab: {2: 'TAKEAWAY'},
       ),
       theme: TrendingTheme.lightTheme(),
       themeMode: ThemeMode.light,

@@ -1,6 +1,7 @@
 import 'dart:collection';
 import 'dart:math';
 
+import 'package:agent/src/screens/home/home_data.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
@@ -12,13 +13,13 @@ import 'package:split_view/split_view.dart';
 import 'package:agent/src/extensions/responsive.dart';
 import 'package:agent/src/screens/home/home_bloc.dart';
 import 'package:agent/src/screens/settings.dart';
-import 'package:agent/src/screens/table.dart';
+import 'package:agent/src/screens/table/table.dart';
 
 class HomeScreen extends StatefulWidget {
-  String index;
+  Map<int, String> tab;
   HomeScreen({
     Key? key,
-    required this.index,
+    required this.tab,
   }) : super(key: key);
 
   @override
@@ -31,38 +32,32 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     // TODO: implement initState
-    widget.index;
+    // widget.tab.entries;
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => HomeBloc(),
-      child: context.responsive(
-        df: _mainVertiBuilder(),
-        md: _mainHorizBuilder(),
-      ),
+    return context.responsive(
+      df: _mainVertiBuilder(),
+      md: _mainHorizBuilder(),
     );
   }
 
   // int tab = 0;
-  Widget _tabButton({
-    required String name,
-    required double size,
-    required IconData iconData,
-  }) {
+  Widget _tabButton(int index) {
+    Map<int, IconData> icon = tabs[index].values.single.icon;
     return Center(
       child: InkWell(
         child: context.responsive(
           df: Icon(
-            iconData,
-            size: size,
+            icon.values.single,
+            size: icon.keys.single.toDouble(),
           ),
           md: Text(
-            name,
+            tabs[index].values.single.name,
             style: TextStyle(
-              fontWeight: FontWeight.values[(size ~/ 6)],
+              fontWeight: FontWeight.values[(icon.keys.single.toDouble() ~/ 6)],
             ),
           ),
         ),
@@ -79,79 +74,31 @@ class _HomeScreenState extends State<HomeScreen> {
           disableDepth: disableDepth,
           borderRadius: BorderRadius.zero,
         ),
-        selectedIndex: _tabIndex,
+        selectedIndex: widget.tab.entries.first.key,
         children: [
           ToggleElement(
-            background: _tabButton(
-              name: 'Book Now',
-              size: 20,
-              iconData: Icons.menu_book_rounded,
-            ),
-            foreground: _tabButton(
-              name: 'Reserved',
-              size: 30,
-              iconData: Icons.menu_book_rounded,
-            ),
+            background: _tabButton(0),
+            foreground: _tabButton(1),
           ),
           ToggleElement(
-            background: _tabButton(
-              name: 'Table Now',
-              size: 20,
-              iconData: Icons.local_dining_rounded,
-            ),
-            foreground: _tabButton(
-              name: 'Dine In',
-              size: 30,
-              iconData: Icons.local_dining_rounded,
-            ),
+            background: _tabButton(2),
+            foreground: _tabButton(3),
           ),
           ToggleElement(
-            background: _tabButton(
-              name: 'Order Now',
-              size: 20,
-              iconData: Icons.delivery_dining_rounded,
-            ),
-            foreground: _tabButton(
-              name: 'Takeaway',
-              size: 30,
-              iconData: Icons.delivery_dining_rounded,
-            ),
+            background: _tabButton(4),
+            foreground: _tabButton(5),
           ),
           ToggleElement(
-            background: _tabButton(
-              name: 'Preview',
-              size: 20,
-              iconData: Icons.folder_open_rounded,
-            ),
-            foreground: _tabButton(
-              name: 'Current',
-              size: 30,
-              iconData: Icons.folder_open_rounded,
-            ),
+            background: _tabButton(6),
+            foreground: _tabButton(7),
           ),
           ToggleElement(
-            background: _tabButton(
-              name: 'Takings',
-              size: 20,
-              iconData: Icons.bar_chart_rounded,
-            ),
-            foreground: _tabButton(
-              name: 'Report',
-              size: 30,
-              iconData: Icons.bar_chart_rounded,
-            ),
+            background: _tabButton(8),
+            foreground: _tabButton(9),
           ),
           ToggleElement(
-            background: _tabButton(
-              name: 'Settings',
-              size: 20,
-              iconData: Icons.settings_rounded,
-            ),
-            foreground: _tabButton(
-              name: 'Admins',
-              size: 30,
-              iconData: Icons.settings_rounded,
-            ),
+            background: _tabButton(10),
+            foreground: _tabButton(11),
           ),
         ],
         thumb: Neumorphic(
@@ -160,19 +107,15 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ),
         onChanged: (value) {
-          setState(() {
-            if (value != 5) _tabIndex = value;
-          });
+          // setState(() {
+          //   if (value != 5) _tabIndex = value;
+          // });
 
           switch (value) {
             case 1:
-              Navigator.pop(context);
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => TableScreen(
-                            tableIndex: widget.index,
-                          )));
+              // Navigator.pop(context);
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => TableScreen()));
 
               break;
             case 5:
@@ -187,24 +130,16 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _mainVertiBuilder() {
-    return BlocConsumer<HomeBloc, HomeState>(
-      listener: (context, state) {
-        // TODO: implement listener
-      },
-      builder: (context, state) {
-        // print("HOME: " + widget.index);
-        return Scaffold(
-          appBar: _appBarVerti(state),
-          body: _bodyVertiFrame(),
-          bottomNavigationBar: _tabBuilder(disableDepth: true),
-          // _tabVertiBuilder(index: 0, iconData: Icons.menu_book_rounded),
-          // _tabVertiBuilder(index: 1, iconData: Icons.local_dining_rounded),
-          // _tabVertiBuilder(index: 2, iconData: Icons.delivery_dining_rounded),
-          // _tabVertiBuilder(index: 3, iconData: Icons.folder_open_rounded),
-          // _tabVertiBuilder(index: 4, iconData: Icons.bar_chart_rounded),
-          // _tabVertiBuilder(index: 5, iconData: Icons.settings),
-        );
-      },
+    return Scaffold(
+      appBar: _appBarVerti(),
+      body: _bodyVertiFrame(),
+      bottomNavigationBar: _tabBuilder(disableDepth: true),
+      // _tabVertiBuilder(index: 0, iconData: Icons.menu_book_rounded),
+      // _tabVertiBuilder(index: 1, iconData: Icons.local_dining_rounded),
+      // _tabVertiBuilder(index: 2, iconData: Icons.delivery_dining_rounded),
+      // _tabVertiBuilder(index: 3, iconData: Icons.folder_open_rounded),
+      // _tabVertiBuilder(index: 4, iconData: Icons.bar_chart_rounded),
+      // _tabVertiBuilder(index: 5, iconData: Icons.settings),
     );
   }
 
@@ -215,9 +150,9 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  NeumorphicAppBar _appBarVerti(HomeState state) {
+  NeumorphicAppBar _appBarVerti() {
     return NeumorphicAppBar(
-      title: Text(widget.index),
+      title: Text(widget.tab.entries.single.value),
       padding: 0,
       actions: [
         IconButton(onPressed: () {}, icon: Icon(Icons.assignment_outlined))

@@ -1,17 +1,16 @@
-import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
+import 'package:agent/src/screens/table/table_data.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
 import 'package:agent/src/extensions/responsive.dart';
 import 'package:agent/src/global/state/status.dart';
+import 'package:agent/src/models/table.dart';
 import 'package:agent/src/screens/home.dart';
 import 'package:agent/src/screens/home/home_bloc.dart';
 
 class TableScreen extends StatefulWidget {
-  TableScreen({super.key, required String tableIndex});
+  TableScreen({super.key});
 
   @override
   State<TableScreen> createState() => _TableScreenState();
@@ -22,28 +21,40 @@ class _TableScreenState extends State<TableScreen> {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => HomeBloc(),
-      child: Scaffold(body: _tableBuilder()),
+      child: Scaffold(
+        appBar: NeumorphicAppBar(title: Text('Select Table')),
+        body: _tableBuilder(),
+      ),
     );
   }
 
   Widget _tableBuilder() {
-    return MasonryGridView.count(
-      padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-      // crossAxisCount: (MediaQuery.of(context).size.width ~/
-      //     (MediaQuery.of(context).size.height / 8)),
-      crossAxisCount: (context.responsive(df: 4, sm: 5, md: 6, lg: 8, xl: 9)),
+    return Center(
+      child: MasonryGridView.count(
+        shrinkWrap: true,
+        physics: NeverScrollableScrollPhysics(),
+        padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+        // crossAxisCount: (MediaQuery.of(context).size.width ~/
+        //     (MediaQuery.of(context).size.height / 8)),
+        crossAxisCount: (context.responsive(df: 4, sm: 5, md: 6, lg: 8, xl: 9)),
 
-      mainAxisSpacing: 10,
-      crossAxisSpacing: 10,
-      itemCount: 20,
-      itemBuilder: (context, index) {
-        return _buttonBuilder(
-            text: 'Table ' + index.toString(), tableIndex: index);
-      },
+        mainAxisSpacing: 10,
+        crossAxisSpacing: 10,
+        itemCount: allTables.length,
+        itemBuilder: (context, index) {
+          return _buttonBuilder(
+            table: TableNow(
+              allTables[index].index,
+              allTables[index].status,
+              allTables[index].hasLocked,
+            ),
+          );
+        },
+      ),
     );
   }
 
-  Widget _buttonBuilder({required String text, required int tableIndex}) {
+  Widget _buttonBuilder({required TableNow table}) {
     return BlocConsumer<HomeBloc, HomeState>(
       listener: (widget, state) {
         if (state.status is StatusSucess) {
@@ -55,6 +66,7 @@ class _TableScreenState extends State<TableScreen> {
           duration: Duration(milliseconds: 25),
           padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
           style: NeumorphicStyle(
+            color: table.status.values.elementAt(0),
             shape: NeumorphicShape.concave,
             surfaceIntensity: 0.1,
             boxShape: NeumorphicBoxShape.roundRect(
@@ -63,7 +75,7 @@ class _TableScreenState extends State<TableScreen> {
           ),
           child: Center(
             child: Text(
-              text,
+              'TABLE ' + table.index.toString(),
               textAlign: TextAlign.center,
             ),
           ),
@@ -71,16 +83,17 @@ class _TableScreenState extends State<TableScreen> {
             setState(() {
               context
                   .read<HomeBloc>()
-                  .add(TableName_HomeEvent(name: tableIndex.toString()));
+                  .add(TableName_HomeEvent(name: table.index.toString()));
             });
 
             // print("Now " + widget.index);
-            Navigator.pop(context);
+            // Navigator.pop(context);
             Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) =>
-                        HomeScreen(index: tableIndex.toString())));
+                  builder: (context) =>
+                      HomeScreen(tab: {1: table.index.toString()}),
+                ));
           },
         );
       },
