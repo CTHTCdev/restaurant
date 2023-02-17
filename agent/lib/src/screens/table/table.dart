@@ -4,7 +4,7 @@ import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
 import 'package:agent/src/extensions/responsive.dart';
-import 'package:agent/src/global/state/status.dart';
+import 'package:agent/src/global/states/status.dart';
 import 'package:agent/src/models/table.dart';
 import 'package:agent/src/screens/home.dart';
 import 'package:agent/src/screens/home/home_bloc.dart';

@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:agent/src/global/state/status.dart';
+import 'package:agent/src/global/states/status.dart';
 import 'package:bloc/bloc.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:meta/meta.dart';
