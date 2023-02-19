@@ -1,3 +1,5 @@
+import 'package:agent/src/models/category.dart';
+import 'package:agent/src/screens/category/category_repo.dart';
 import 'package:agent/src/screens/table/table_data.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
@@ -6,7 +8,7 @@ import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:agent/src/extensions/responsive.dart';
 import 'package:agent/src/global/states/status.dart';
 import 'package:agent/src/models/table.dart';
-import 'package:agent/src/screens/home.dart';
+import 'package:agent/src/screens/home/home.dart';
 import 'package:agent/src/screens/home/home_bloc.dart';
 
 class TableScreen extends StatefulWidget {
@@ -55,47 +57,35 @@ class _TableScreenState extends State<TableScreen> {
   }
 
   Widget _buttonBuilder({required TableNow table}) {
-    return BlocConsumer<HomeBloc, HomeState>(
-      listener: (widget, state) {
-        if (state.status is StatusSucess) {
-          print("STATE: " + state.name);
-        }
-      },
-      builder: (context, state) {
-        return NeumorphicButton(
-          duration: Duration(milliseconds: 25),
-          padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-          style: NeumorphicStyle(
-            color: table.status.values.elementAt(0),
-            shape: NeumorphicShape.concave,
-            surfaceIntensity: 0.1,
-            boxShape: NeumorphicBoxShape.roundRect(
-              BorderRadius.circular(0),
-            ),
-          ),
-          child: Center(
-            child: Text(
-              'TABLE ' + table.index.toString(),
-              textAlign: TextAlign.center,
-            ),
-          ),
-          onPressed: () {
-            setState(() {
-              context
-                  .read<HomeBloc>()
-                  .add(TableName_HomeEvent(name: table.index.toString()));
-            });
-
-            // print("Now " + widget.index);
-            // Navigator.pop(context);
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) =>
-                      HomeScreen(tab: {1: table.index.toString()}),
-                ));
-          },
-        );
+    return NeumorphicButton(
+      duration: Duration(milliseconds: 25),
+      padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+      style: NeumorphicStyle(
+        color: table.status.values.elementAt(0),
+        shape: NeumorphicShape.concave,
+        surfaceIntensity: 0.1,
+        boxShape: NeumorphicBoxShape.roundRect(
+          BorderRadius.circular(0),
+        ),
+      ),
+      child: Center(
+        child: Text(
+          'TABLE ' + table.index.toString(),
+          textAlign: TextAlign.center,
+        ),
+      ),
+      onPressed: () async {
+        // print("Now " + widget.index);
+        List<CategoryNow> categories =
+            await CategoryRepo.instance.fetchAllCategory();
+        print(categories);
+        Navigator.pop(context);
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) =>
+                  HomeScreen(tab: {1: table.index.toString()}),
+            ));
       },
     );
   }

@@ -1,6 +1,3 @@
-import 'dart:html';
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 
@@ -18,8 +15,13 @@ class GraphQlService {
     link: httpsLink,
   );
 
-  static HttpLink httpsLink =
-      HttpLink('https://', defaultHeaders: {'x-api-key': ''});
+  static HttpLink httpsLink = HttpLink(
+    'https://api.cthtc.com/v1/graphql',
+    defaultHeaders: {
+      'x-hasura-admin-secret':
+          'FAuhdDOZasusOl8bSPbjzkh1Wauv8IfHiE6h50pu0r7CtCBEI0Wa2vR6UqPuLr75'
+    },
+  );
 
   // QUERY
   static Future<QueryResult> performQuery({

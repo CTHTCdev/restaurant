@@ -1,6 +1,10 @@
 import 'dart:collection';
 import 'dart:math';
 
+import 'package:agent/src/global/states/status.dart';
+import 'package:agent/src/models/category.dart';
+import 'package:agent/src/screens/category/category.dart';
+import 'package:agent/src/screens/category/category_bloc.dart';
 import 'package:agent/src/screens/home/home_data.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
@@ -107,13 +111,9 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ),
         onChanged: (value) {
-          // setState(() {
-          //   if (value != 5) _tabIndex = value;
-          // });
-
           switch (value) {
             case 1:
-              // Navigator.pop(context);
+              Navigator.pop(context);
               Navigator.push(context,
                   MaterialPageRoute(builder: (context) => TableScreen()));
 
@@ -193,7 +193,7 @@ class _HomeScreenState extends State<HomeScreen> {
       viewMode: SplitViewMode.Vertical,
       indicator: SplitIndicator(viewMode: SplitViewMode.Vertical),
       controller: SplitViewController(weights: [0.4]),
-      children: [_categoriesBuilder(), _itemsBuilder()],
+      children: [CategoryScreen(), _itemsBuilder()],
     );
   }
 
@@ -223,36 +223,6 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _categoriesBuilder() {
-    return Stack(children: [
-      MasonryGridView.count(
-        padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-        // crossAxisCount: (MediaQuery.of(context).size.width ~/
-        //     (MediaQuery.of(context).size.height / 5)),
-        crossAxisCount: (context.responsive(df: 3, sm: 4, md: 5, lg: 6, xl: 8)),
-        mainAxisSpacing: 10,
-        crossAxisSpacing: 10,
-        itemCount: 20,
-        itemBuilder: (context, index) {
-          return _buttonBuilder(text: 'Category Category Category Category');
-        },
-      ),
-      NeumorphicButton(
-        duration: Duration(milliseconds: 25),
-        padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-        style: NeumorphicStyle(
-          shape: NeumorphicShape.concave,
-          surfaceIntensity: 0.1,
-          boxShape: NeumorphicBoxShape.roundRect(
-            BorderRadius.zero,
-          ),
-        ),
-        child: Icon(Icons.search),
-        onPressed: () {},
-      ),
-    ]);
-  }
-
   Widget _itemsBuilder() {
     return MasonryGridView.count(
       padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
@@ -264,12 +234,13 @@ class _HomeScreenState extends State<HomeScreen> {
       crossAxisSpacing: 10,
       itemCount: 20,
       itemBuilder: (context, index) {
-        return _buttonBuilder(text: 'Menu Menu Menu Menu');
+        return _buttonBuilder(object: 'Menu Menu Menu Menu');
       },
     );
   }
 
-  Widget _buttonBuilder({required String text}) {
+  Widget _buttonBuilder({required Object object}) {
+    String name = "TEST";
     return NeumorphicButton(
       duration: Duration(milliseconds: 25),
       padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
@@ -281,13 +252,9 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       ),
       child: Center(
-          child: Text(
-        text,
-        textAlign: TextAlign.center,
-      )),
-      onPressed: () {
-        // print('TAB is ' + tab.toString());
-      },
+        child: Text(name, textAlign: TextAlign.center),
+      ),
+      onPressed: () {},
     );
   }
 }

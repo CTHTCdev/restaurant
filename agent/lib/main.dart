@@ -1,4 +1,4 @@
-import 'package:agent/src/screens/home.dart';
+import 'package:agent/src/screens/home/home.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
