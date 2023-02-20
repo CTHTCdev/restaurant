@@ -28,7 +28,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
       child: BlocConsumer<CategoryBloc, CategoryState>(
         listener: (context, state) {
           if (state.status is StatusSucess) {
-            print(state.categories!.length);
+            // print(state.categories!.length);
             setState(() {
               categories = state.categories!;
             });

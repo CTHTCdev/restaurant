@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 class CategoryNow {
   final String id;
   final String name;

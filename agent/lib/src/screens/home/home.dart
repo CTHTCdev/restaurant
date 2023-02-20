@@ -3,9 +3,11 @@ import 'dart:math';
 
 import 'package:agent/src/global/states/status.dart';
 import 'package:agent/src/models/category.dart';
+import 'package:agent/src/models/menu.dart';
 import 'package:agent/src/screens/category/category.dart';
 import 'package:agent/src/screens/category/category_bloc.dart';
 import 'package:agent/src/screens/home/home_data.dart';
+import 'package:agent/src/screens/menu/menu_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
@@ -223,19 +225,33 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  List<MenuNow> menus = [];
   Widget _itemsBuilder() {
-    return MasonryGridView.count(
-      padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-      // crossAxisCount: (MediaQuery.of(context).size.width ~/
-      //     (MediaQuery.of(context).size.height / 8)),
-      crossAxisCount: (context.responsive(df: 4, sm: 5, md: 6, lg: 8, xl: 9)),
+    return BlocProvider(
+      create: (context) => MenuBloc()..add(Fetch_MenuEvent()),
+      child: BlocConsumer<MenuBloc, MenuState>(
+        listener: (context, state) {
+          if (state.status is StatusSucess) {
+            print("hello" + state.menus!.length.toString());
+          }
+        },
+        builder: (context, state) {
+          return MasonryGridView.count(
+            padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+            // crossAxisCount: (MediaQuery.of(context).size.width ~/
+            //     (MediaQuery.of(context).size.height / 8)),
+            crossAxisCount:
+                (context.responsive(df: 4, sm: 5, md: 6, lg: 8, xl: 9)),
 
-      mainAxisSpacing: 10,
-      crossAxisSpacing: 10,
-      itemCount: 20,
-      itemBuilder: (context, index) {
-        return _buttonBuilder(object: 'Menu Menu Menu Menu');
-      },
+            mainAxisSpacing: 10,
+            crossAxisSpacing: 10,
+            itemCount: 20,
+            itemBuilder: (context, index) {
+              return _buttonBuilder(object: 'Menu Menu Menu Menu');
+            },
+          );
+        },
+      ),
     );
   }
 
@@ -245,6 +261,7 @@ class _HomeScreenState extends State<HomeScreen> {
       duration: Duration(milliseconds: 25),
       padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
       style: NeumorphicStyle(
+        // color: Color(),
         shape: NeumorphicShape.concave,
         surfaceIntensity: 0.1,
         boxShape: NeumorphicBoxShape.roundRect(

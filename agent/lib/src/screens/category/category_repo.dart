@@ -17,7 +17,7 @@ class CategoryRepo {
     // Assign model
     if (categories.isNotEmpty) {
       return (categories as List)
-          .map((categoriy) => CategoryNow.fromMap(categoriy))
+          .map((category) => CategoryNow.fromMap(category))
           .toList();
     }
     return [];
