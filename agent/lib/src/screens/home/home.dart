@@ -232,7 +232,7 @@ class _HomeScreenState extends State<HomeScreen> {
       child: BlocConsumer<MenuBloc, MenuState>(
         listener: (context, state) {
           if (state.status is StatusSucess) {
-            print("hello" + state.menus!.length.toString());
+            // print("hello" + state.menus!.length.toString());
           }
         },
         builder: (context, state) {

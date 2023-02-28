@@ -12,7 +12,7 @@ class MenuRepo {
       document: FETCH_ALL_Menu,
     );
     final menus = result.data?['menu'];
-    print(menus);
+    // print(menus);
     // Assign model
     if (menus.isNotEmpty) {
       return (menus as List).map((menu) => MenuNow.fromMap(menu)).toList();
