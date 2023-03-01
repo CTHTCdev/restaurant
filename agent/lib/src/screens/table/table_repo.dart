@@ -6,12 +6,12 @@ class TableRepo {
   TableRepo._();
   static final TableRepo instance = TableRepo._();
 
-  Future<List<TableNow>> fetchAllTable() async {
+  Future<List<TableNow>> fetchTables() async {
     // return QueryResult from Future<>
     final QueryResult result = await GraphQlService.performQuery(
       document: FETCH_ALL_TABLE,
     );
-    final tables = result.data?['table'];
+    final tables = result.data?['tables'];
     // print(tables);
     // Assign model
     if (tables.isNotEmpty) {
@@ -24,7 +24,7 @@ class TableRepo {
 
   static const String FETCH_ALL_TABLE = '''
     query ListTable{
-      table {
+      tables {
         id
         table_name
         table_status
@@ -33,5 +33,34 @@ class TableRepo {
         table_type
       }
     }
-    ''';
+  ''';
+
+
+  Stream<QueryResult> streamTables() {
+    // return QueryResult from Future<>
+    final Stream<QueryResult> subscription = GraphQlService.performSubscribe(
+      document: STREAM_TABLE,
+    );
+    // print(tables);
+    subscription.listen((result) {
+      (result.data?['tables'] as List)
+        .map((table) => TableNow.fromMap(table))
+        .toList();
+    });
+
+    return subscription;
+  }
+
+  static const String STREAM_TABLE = '''
+    subscription SubscriptionTable {
+      tables {
+        id
+        table_name
+        table_status
+        table_locked
+        table_assigned
+        table_type
+      }
+    }
+  ''';
 }
