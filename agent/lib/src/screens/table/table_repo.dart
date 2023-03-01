@@ -11,7 +11,7 @@ class TableRepo {
     final QueryResult result = await GraphQlService.performQuery(
       document: FETCH_ALL_TABLE,
     );
-    final tables = result.data?['tables'];
+    final tables = result.data?['table'];
     // print(tables);
     // Assign model
     if (tables.isNotEmpty) {
@@ -24,7 +24,7 @@ class TableRepo {
 
   static const String FETCH_ALL_TABLE = '''
     query ListTable{
-      tables {
+      table {
         id
         table_name
         table_status
@@ -43,7 +43,7 @@ class TableRepo {
     );
     // print(tables);
     subscription.listen((result) {
-      (result.data?['tables'] as List)
+      (result.data?['table'] as List)
         .map((table) => TableNow.fromMap(table))
         .toList();
     });
@@ -53,7 +53,7 @@ class TableRepo {
 
   static const String STREAM_TABLE = '''
     subscription SubscriptionTable {
-      tables {
+      table {
         id
         table_name
         table_status

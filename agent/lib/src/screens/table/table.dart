@@ -37,94 +37,95 @@ class _TableScreenState extends State<TableScreen> {
   }
 
 
+  // Widget _tableBuilder() {
+  //   return Subscription(
+  //     options: SubscriptionOptions(document: gql(TableRepo.STREAM_TABLE)),
+  //     builder: (result) {
+  //       print(result);
+  //       return Text('data');
+  //     },
+  //   );
+  // }
+double top = 0;
+double left =0;
   Widget _tableBuilder() {
-    return Subscription(
-      options: SubscriptionOptions(document: gql(TableRepo.STREAM_TABLE)),
-      builder: ({
-        dynamic payload
-      }) {
-        if (loading == false && error == null) {
-          return Text(payload['counter'][0]['count'].toString());
-        } else {
-          return Text("Fetching Count");
-        }
-      },
+    return BlocProvider(
+      create: (context) => TableBloc()..add(Fetch_TableEvent()),
+      child: BlocConsumer<TableBloc, TableState>(
+        listener: (context, state) {
+          if (state.status is StatusSucess) {
+            setState(() {
+              tables = state.tables!;
+            });
+          } else {
+            print('cannot fetch TABLE');
+          }
+        },
+        builder: (context, state) {
+          return Stack(
+            children: List.generate(tables.length, (index) {
+                  return _buttonBuilder(
+                    index: index,
+                    table: TableNow(
+                      id: tables[index].id, 
+                      name: tables[index].name, 
+                      status: tables[index].status, 
+                      isLocked: tables[index].isLocked, 
+                      assignee: tables[index].assignee, 
+                      type: tables[index].type
+                    )
+                  );
+                },
+              ),
+          );
+        },
+      ),
     );
   }
 
-  // Widget _tableBuilder() {
-  //   return BlocProvider(
-  //     create: (context) => TableBloc()..add(Fetch_TableEvent()),
-  //     child: BlocConsumer<TableBloc, TableState>(
-  //       listener: (context, state) {
-  //         if (state.status is StatusSucess) {
-  //           setState(() {
-  //             tables = state.tables!;
-  //           });
-  //         } else {
-  //           print('cannot fetch');
-  //         }
-  //       },
-  //       builder: (context, state) {
-  //         return Center(
-  //           child: MasonryGridView.count(
-  //             shrinkWrap: true,
-  //             physics: NeverScrollableScrollPhysics(),
-  //             padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-  //             // crossAxisCount: (MediaQuery.of(context).size.width ~/
-  //             //     (MediaQuery.of(context).size.height / 8)),
-  //             crossAxisCount:
-  //                 (context.responsive(df: 4, sm: 5, md: 6, lg: 8, xl: 9)),
 
-  //             mainAxisSpacing: 10,
-  //             crossAxisSpacing: 10,
-  //             itemCount: tables.length,
-  //             itemBuilder: (context, index) {
-  //               return _buttonBuilder(
-  //                 table: TableNow(
-  //                   id: tables[index].id, 
-  //                   name: tables[index].name, 
-  //                   status: tables[index].status, 
-  //                   isLocked: tables[index].isLocked, 
-  //                   assignee: tables[index].assignee, 
-  //                   type: tables[index].type
-  //                 )
-  //               );
-  //             },
-  //           ),
-  //         );
-  //       },
-  //     ),
-  //   );
-  // }
-
-  Widget _buttonBuilder({required TableNow table}) {
-    return NeumorphicButton(
-      duration: Duration(milliseconds: 25),
-      padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-      style: NeumorphicStyle(
-        shape: NeumorphicShape.concave,
-        surfaceIntensity: 0.1,
-        boxShape: NeumorphicBoxShape.roundRect(
-          BorderRadius.circular(0),
-        ),
-      ),
-      child: Center(
-        child: Text(
-          table.name,
-          textAlign: TextAlign.center,
-        ),
-      ),
-      onPressed: () async {
+  Widget _buttonBuilder({required TableNow table, required int index}) {
+    final child = NeumorphicButton(
+          duration: Duration(milliseconds: 25),
+          padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+          style: NeumorphicStyle(
+            shape: NeumorphicShape.concave,
+            surfaceIntensity: 0.1,
+            boxShape: NeumorphicBoxShape.roundRect(
+              BorderRadius.circular(0),
+            ),
+          ),
+          child: Center(
+            child: Text(
+              table.name,
+              textAlign: TextAlign.center,
+            ),
+          ),
+          onPressed: () async {
+            
+            Navigator.pop(context);
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) =>
+                      HomeScreen(tab: {1: table.name}),
+                ));
+          },
+        );
+    
+    return Positioned(
+      top: top + index*100,
+      left: left,
+      child: Draggable(
         
-        Navigator.pop(context);
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) =>
-                  HomeScreen(tab: {1: table.name}),
-            ));
-      },
+        onDragUpdate: (details) {
+          top = top + details.delta.dy;
+          left = left + details.delta.dx;
+          setState(() {});
+        },
+        feedback: child,
+        child: child,
+      ),
     );
   }
 }
