@@ -1,5 +1,6 @@
 import 'package:agent/src/global/services/graphql.dart';
 import 'package:agent/src/models/table.dart';
+import 'package:agent/src/screens/table/table_fragment.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 
 class TableRepo {
@@ -12,7 +13,7 @@ class TableRepo {
       document: FETCH_ALL_TABLE,
     );
     final tables = result.data?['table'];
-    // print(tables);
+    print(tables);
     // Assign model
     if (tables.isNotEmpty) {
       return (tables as List)
@@ -23,6 +24,7 @@ class TableRepo {
   }
 
   static const String FETCH_ALL_TABLE = '''
+    ${TableFragment.TABLE_PROPS}
     query ListTable{
       table {
         id
@@ -30,7 +32,9 @@ class TableRepo {
         table_status
         table_locked
         table_assigned
-        table_type
+        props {
+          ...TableProps
+        }
       }
     }
   ''';
@@ -59,6 +63,36 @@ class TableRepo {
         table_status
         table_locked
         table_assigned
+        table_type
+      }
+    }
+  ''';
+}
+
+class TablePropsRepo {
+  TablePropsRepo._();
+  static final TablePropsRepo instance = TablePropsRepo._();
+
+  // Future<TableProps> getTableProps() async {
+  void getTableProps() async {
+    // return QueryResult from Future<>
+    final QueryResult result = await GraphQlService.performQuery(
+      document: GET_TABLE_PROPS_BY_ID,
+    );
+    final table_props = result.data?['table_props_by_pk'];
+    // print(table_props);
+    // Assign model
+    
+  }
+
+  static const String GET_TABLE_PROPS_BY_ID = '''
+    query MyQuery {
+      table_props_by_pk(id: 1) {
+        id
+        table_dx
+        table_dy
+        table_len
+        table_wid
         table_type
       }
     }

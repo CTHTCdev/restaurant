@@ -72,7 +72,7 @@ double left =0;
                       status: tables[index].status, 
                       isLocked: tables[index].isLocked, 
                       assignee: tables[index].assignee, 
-                      type: tables[index].type
+                      props: tables[index].props, 
                     )
                   );
                 },
@@ -97,7 +97,8 @@ double left =0;
           ),
           child: Center(
             child: Text(
-              table.name,
+              table.props!.type,
+              // table.name,
               textAlign: TextAlign.center,
             ),
           ),

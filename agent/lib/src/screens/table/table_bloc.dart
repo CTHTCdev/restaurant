@@ -15,7 +15,11 @@ class TableBloc extends Bloc<TableEvent, TableState> {
   Stream<TableState> mapEventToState(TableEvent event) async* {
     if(event is Fetch_TableEvent){
       try {
+        // (TablePropsRepo.instance.getTableProps());
+        // print('passed');
+        
         List<TableNow> tables = await _tableRepo.fetchTables();
+        
         yield state.copyWith(status: StatusSucess(), tables: tables);
       } catch (e) {
         yield state.copyWith(status: StatusFailed(e: e));
