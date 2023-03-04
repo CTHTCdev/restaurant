@@ -16,9 +16,7 @@ class TableRepo {
     print(tables);
     // Assign model
     if (tables.isNotEmpty) {
-      return (tables as List)
-          .map((table) => TableNow.fromMap(table))
-          .toList();
+      return (tables as List).map((table) => TableNow.fromMap(table)).toList();
     }
     return [];
   }
@@ -39,7 +37,6 @@ class TableRepo {
     }
   ''';
 
-
   Stream<QueryResult> streamTables() {
     // return QueryResult from Future<>
     final Stream<QueryResult> subscription = GraphQlService.performSubscribe(
@@ -48,8 +45,8 @@ class TableRepo {
     // print(tables);
     subscription.listen((result) {
       (result.data?['table'] as List)
-        .map((table) => TableNow.fromMap(table))
-        .toList();
+          .map((table) => TableNow.fromMap(table))
+          .toList();
     });
 
     return subscription;
@@ -82,7 +79,6 @@ class TablePropsRepo {
     final table_props = result.data?['table_props_by_pk'];
     // print(table_props);
     // Assign model
-    
   }
 
   static const String GET_TABLE_PROPS_BY_ID = '''
@@ -91,8 +87,7 @@ class TablePropsRepo {
         id
         table_dx
         table_dy
-        table_len
-        table_wid
+        table_seat
         table_type
       }
     }

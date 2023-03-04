@@ -4,8 +4,7 @@ class TableFragment {
       id
       table_dx
       table_dy
-      table_len
-      table_wid
+      table_seat
       table_type
     }
   ''';

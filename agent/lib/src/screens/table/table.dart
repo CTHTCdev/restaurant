@@ -36,7 +36,6 @@ class _TableScreenState extends State<TableScreen> {
     );
   }
 
-
   // Widget _tableBuilder() {
   //   return Subscription(
   //     options: SubscriptionOptions(document: gql(TableRepo.STREAM_TABLE)),
@@ -46,8 +45,6 @@ class _TableScreenState extends State<TableScreen> {
   //     },
   //   );
   // }
-double top = 0;
-double left =0;
   Widget _tableBuilder() {
     return BlocProvider(
       create: (context) => TableBloc()..add(Fetch_TableEvent()),
@@ -63,65 +60,71 @@ double left =0;
         },
         builder: (context, state) {
           return Stack(
-            children: List.generate(tables.length, (index) {
-                  return _buttonBuilder(
+            children: List.generate(
+              tables.length,
+              (index) {
+                return _buttonBuilder(
                     index: index,
                     table: TableNow(
-                      id: tables[index].id, 
-                      name: tables[index].name, 
-                      status: tables[index].status, 
-                      isLocked: tables[index].isLocked, 
-                      assignee: tables[index].assignee, 
-                      props: tables[index].props, 
-                    )
-                  );
-                },
-              ),
+                      id: tables[index].id,
+                      name: tables[index].name,
+                      status: tables[index].status,
+                      isLocked: tables[index].isLocked,
+                      assignee: tables[index].assignee,
+                      props: tables[index].props,
+                    ));
+              },
+            ),
           );
         },
       ),
     );
   }
 
-
   Widget _buttonBuilder({required TableNow table, required int index}) {
+    bool isRound = table.props!.type == "ROUND";
+    bool isEqual = table.props!.type != "RECT";
+    double seat = table.props!.seat * 2;
+    double length = (isEqual ? seat : seat / 2);
+    double width = isEqual ? seat : seat * 2;
+
     final child = NeumorphicButton(
-          duration: Duration(milliseconds: 25),
-          padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-          style: NeumorphicStyle(
-            shape: NeumorphicShape.concave,
-            surfaceIntensity: 0.1,
-            boxShape: NeumorphicBoxShape.roundRect(
-              BorderRadius.circular(0),
-            ),
+      duration: Duration(milliseconds: 25),
+      padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+      style: NeumorphicStyle(
+        shape: NeumorphicShape.concave,
+        surfaceIntensity: 0.1,
+        boxShape: NeumorphicBoxShape.roundRect(
+          BorderRadius.circular(isRound ? seat * 10 : 0),
+        ),
+      ),
+      child: SizedBox(
+        height: length * context.responsive(df: 6, md: 8, xl: 10),
+        width: width * context.responsive(df: 6, md: 8, xl: 10),
+        child: Center(
+          child: Text(
+            table.name,
+            textAlign: TextAlign.center,
           ),
-          child: Center(
-            child: Text(
-              table.props!.type,
-              // table.name,
-              textAlign: TextAlign.center,
-            ),
-          ),
-          onPressed: () async {
-            
-            Navigator.pop(context);
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) =>
-                      HomeScreen(tab: {1: table.name}),
-                ));
-          },
-        );
-    
+        ),
+      ),
+      onPressed: () async {
+        Navigator.pop(context);
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => HomeScreen(tab: {1: table.name}),
+            ));
+      },
+    );
+
     return Positioned(
-      top: top + index*100,
-      left: left,
+      top: table.props!.dy,
+      left: table.props!.dx,
       child: Draggable(
-        
         onDragUpdate: (details) {
-          top = top + details.delta.dy;
-          left = left + details.delta.dx;
+          table.props!.dx += details.delta.dx;
+          table.props!.dy += details.delta.dy;
           setState(() {});
         },
         feedback: child,

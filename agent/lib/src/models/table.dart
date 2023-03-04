@@ -7,14 +7,13 @@ class TableNow {
   final TableProps? props;
 
   TableNow({
-    required this.id, 
-    required this.name, 
-    required this.status, 
-    required this.isLocked, 
+    required this.id,
+    required this.name,
+    required this.status,
+    required this.isLocked,
     required this.assignee,
     required this.props,
   });
-
 
   TableNow copyWith({
     String? id,
@@ -25,13 +24,12 @@ class TableNow {
     TableProps? props,
   }) {
     return TableNow(
-      id: id ?? this.id,
-      name: name ?? this.name,
-      status: status ?? this.status,
-      isLocked: isLocked ?? this.isLocked,
-      assignee: assignee ?? this.assignee,
-      props: props ?? this.props
-    );
+        id: id ?? this.id,
+        name: name ?? this.name,
+        status: status ?? this.status,
+        isLocked: isLocked ?? this.isLocked,
+        assignee: assignee ?? this.assignee,
+        props: props ?? this.props);
   }
 
   Map<String, dynamic> toMap() {
@@ -41,7 +39,7 @@ class TableNow {
       'status': status,
       'isLocked': isLocked,
       'assignee': assignee,
-      'props' : props,
+      'props': props,
     };
   }
 
@@ -57,38 +55,27 @@ class TableNow {
   }
 }
 
-
 class TableProps {
   final int id;
-  final double dx;
-  final double dy;
-  final double length;
-  final double width;
+  double dx;
+  double dy;
+  final double seat;
   final String type;
 
-  TableProps({
-    required this.id, 
-    required this.dx, 
-    required this.dy, 
-    required this.length, 
-    required this.width, 
-    required this.type
-});
+  TableProps(
+      {required this.id,
+      required this.dx,
+      required this.dy,
+      required this.seat,
+      required this.type});
 
-  TableProps copyWith({
-    int? id,
-    double? dx,
-    double? dy,
-    double? length,
-    double? width,
-    String? type
-  }) {
+  TableProps copyWith(
+      {int? id, double? dx, double? dy, double? seat, String? type}) {
     return TableProps(
       id: id ?? this.id,
       dx: dx ?? this.dx,
       dy: dy ?? this.dy,
-      length: length ?? this.length,
-      width: width ?? this.width,
+      seat: seat ?? this.seat,
       type: type ?? this.type,
     );
   }
@@ -98,20 +85,17 @@ class TableProps {
       'id': id,
       'dx': dx,
       'dy': dy,
-      'length': length,
-      'width': width,
-      'type':type,
+      'seat': seat,
+      'type': type,
     };
   }
 
   factory TableProps.fromMap(Map<String, dynamic> map) {
     return TableProps(
-      id: map['id'] ?? 0,
-      dx: map['table_dx'] ?? 0.0,
-      dy: map['table_dy'] ?? 0.0,
-      length: map['table_len'] ?? 0.0,
-      width: map['table_wid'] ?? 0.0,
-      type: map['table_type'] ?? ''
-    );
+        id: map['id'] ?? 0,
+        dx: map['table_dx'] ?? 0.0,
+        dy: map['table_dy'] ?? 0.0,
+        seat: map['table_seat'] ?? 0.0,
+        type: map['table_type'] ?? '');
   }
 }
