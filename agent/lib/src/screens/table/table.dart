@@ -27,11 +27,15 @@ class _TableScreenState extends State<TableScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => HomeBloc(),
-      child: Scaffold(
-        appBar: NeumorphicAppBar(title: Text('Select Table')),
-        body: _tableBuilder(),
+    return Scaffold(
+      appBar: NeumorphicAppBar(title: Text('Select Table'), padding: 0),
+      body: _tableBuilder(),
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: Colors.lightBlueAccent,
+        onPressed: () {
+          // context.read<TableBloc>().add(event);
+        },
+        child: Icon(Icons.add),
       ),
     );
   }
@@ -122,10 +126,13 @@ class _TableScreenState extends State<TableScreen> {
       top: table.props!.dy,
       left: table.props!.dx,
       child: Draggable(
-        onDragUpdate: (details) {
-          table.props!.dx += details.delta.dx;
-          table.props!.dy += details.delta.dy;
+        onDragEnd: (details) {
+          table.props!.dx = details.offset.dx;
+          table.props!.dy = details.offset.dy - 100;
           setState(() {});
+          print(table.id);
+          print("dx: " + table.props!.dx.toString());
+          print("dy: " + table.props!.dy.toString());
         },
         feedback: child,
         child: child,
